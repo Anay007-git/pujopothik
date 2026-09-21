@@ -32,6 +32,7 @@ export default function PandalCard({ pandal, onViewDetails }: PandalCardProps) {
   const { language, t } = useLanguage();
   const { addToRoute, removeFromRoute, isInRoute } = useRoute();
   const [isExpanded, setIsExpanded] = useState(false);
+  const [imgLoaded, setImgLoaded] = useState(false);
   const inRoute = isInRoute(pandal.id);
 
   // Category labels and colors
@@ -73,15 +74,23 @@ export default function PandalCard({ pandal, onViewDetails }: PandalCardProps) {
     <article className="festive-card rounded-2xl sm:rounded-3xl overflow-hidden flex flex-col h-full bg-[#faf7ee] border border-[#c05621]/20 shadow-md hover:shadow-xl transition-all duration-300 group">
       {/* 1. Image Container with Badges */}
       <div className="relative h-52 sm:h-60 w-full overflow-hidden bg-stone-900">
+        {/* Shimmer skeleton before image loads */}
+        {!imgLoaded && (
+          <div className="absolute inset-0 bg-stone-700/60 animate-pulse before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_1.8s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/15 before:to-transparent z-0" />
+        )}
         <Image
           src={pandal.images[0] || "/images/durga-puja-kolkata-main.jpg"}
           alt={pandal.name}
           fill
+          loading="lazy"
+          onLoad={() => setImgLoaded(true)}
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-          className="object-cover group-hover:scale-105 transition-transform duration-700 opacity-90 group-hover:opacity-100"
+          className={`object-cover group-hover:scale-105 transition-all duration-500 z-[1] ${
+            imgLoaded ? "opacity-90 group-hover:opacity-100" : "opacity-0 scale-95"
+          }`}
         />
         {/* Subtle Scrim Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent z-[2]" />
 
         {/* Top Badges (Category + Zone) */}
         <div className="absolute top-3 left-3 flex flex-wrap gap-1.5 z-10">

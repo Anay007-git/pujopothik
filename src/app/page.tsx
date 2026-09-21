@@ -6,34 +6,45 @@ import Link from "next/link";
 import HeroSection from "@/components/hero/HeroSection";
 import PujaCountdown from "@/components/countdown/PujaCountdown";
 import PandalCard from "@/components/pandals/PandalCard";
-import ThemeExplorer from "@/components/themes/ThemeExplorer";
-import PrebuiltRoutes from "@/components/route-builder/PrebuiltRoutes";
-import MetroMapGuide from "@/components/metro/MetroMapGuide";
-import PlanMyPujoWizard from "@/components/wizard/PlanMyPujoWizard";
-import CultureStories from "@/components/culture/CultureStories";
-import FoodFinder from "@/components/food/FoodFinder";
-import PhotoGallery from "@/components/photo/PhotoGallery";
+import { SectionSkeleton, MapSkeleton } from "@/components/common/SkeletonLoader";
 import AlpanaDivider from "@/components/animations/AlpanaDivider";
 import PandalModal from "@/components/pandals/PandalModal";
 import { PANDALS_DATA, Pandal } from "@/data/pandalsData";
 import { useLanguage } from "@/context/LanguageContext";
 import { Compass, MapPin, Sparkles, Route, Train, Map, ArrowRight } from "lucide-react";
+// Dynamically import below-the-fold components with shimmering skeletons for instant initial load
+const PlanMyPujoWizard = dynamic(() => import("@/components/wizard/PlanMyPujoWizard"), {
+  loading: () => <SectionSkeleton count={2} hasHeader={false} />,
+});
 
-// Dynamically import Leaflet Map to avoid SSR errors
-const InteractiveMap = dynamic(
-  () => import("@/components/map/InteractiveMap"),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="w-full h-[75vh] rounded-3xl bg-[#18181c] flex items-center justify-center text-stone-400">
-        <div className="flex flex-col items-center space-y-3">
-          <Map className="w-8 h-8 text-[#d4af37] animate-pulse" />
-          <span className="text-sm font-medium">কলকাতার ইন্টারেক্টিভ মানচিত্র প্রস্তুত হচ্ছে…</span>
-        </div>
-      </div>
-    ),
-  }
-);
+const ThemeExplorer = dynamic(() => import("@/components/themes/ThemeExplorer"), {
+  loading: () => <SectionSkeleton count={3} />,
+});
+
+const PrebuiltRoutes = dynamic(() => import("@/components/route-builder/PrebuiltRoutes"), {
+  loading: () => <SectionSkeleton count={2} hasHeader={false} />,
+});
+
+const MetroMapGuide = dynamic(() => import("@/components/metro/MetroMapGuide"), {
+  loading: () => <SectionSkeleton count={2} hasHeader={false} />,
+});
+
+const InteractiveMap = dynamic(() => import("@/components/map/InteractiveMap"), {
+  ssr: false,
+  loading: () => <MapSkeleton />,
+});
+
+const CultureStories = dynamic(() => import("@/components/culture/CultureStories"), {
+  loading: () => <SectionSkeleton count={3} />,
+});
+
+const FoodFinder = dynamic(() => import("@/components/food/FoodFinder"), {
+  loading: () => <SectionSkeleton count={3} />,
+});
+
+const PhotoGallery = dynamic(() => import("@/components/photo/PhotoGallery"), {
+  loading: () => <SectionSkeleton count={4} />,
+});
 
 export default function HomePage() {
   const { language, t } = useLanguage();
