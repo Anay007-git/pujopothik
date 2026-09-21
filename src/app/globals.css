@@ -1,0 +1,163 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Bengali:wght@300;400;500;600;700&family=Noto+Serif+Bengali:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,400&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --sindoor-red: #9b1b1b;
+  --vermilion: #c05621;
+  --puja-white: #faf7ee;
+  --charcoal-night: #121215;
+  --muted-gold: #d4af37;
+  --clay-terracotta: #8c6246;
+}
+
+body {
+  color: #1a1a1e;
+  background-color: #faf7ee;
+  font-family: 'Inter', 'Noto Sans Bengali', sans-serif;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Custom Bengali Typography Styles */
+.font-bengali-title {
+  font-family: 'Noto Serif Bengali', serif;
+}
+
+.font-bengali-sans {
+  font-family: 'Noto Sans Bengali', 'Inter', sans-serif;
+}
+
+.font-editorial {
+  font-family: 'Playfair Display', 'Noto Serif Bengali', serif;
+}
+
+.font-classical {
+  font-family: 'Cinzel', 'Noto Serif Bengali', serif;
+}
+
+/* Red-bordered Bengali Sari Trim (Lal-Par Sada Sari accent) */
+.lal-par-trim {
+  border-top: 3px solid #9b1b1b;
+  border-bottom: 3px solid #9b1b1b;
+  position: relative;
+}
+
+.lal-par-trim::before,
+.lal-par-trim::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: rgba(155, 27, 27, 0.4);
+}
+
+.lal-par-trim::before {
+  top: 2px;
+}
+
+.lal-par-trim::after {
+  bottom: 2px;
+}
+
+/* Authentic Bengali Alpana Stroke Pattern */
+.alpana-svg-draw path {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: drawAlpana 3.5s ease-in-out forwards;
+}
+
+@keyframes drawAlpana {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Subtle Dhaak Pulse */
+@keyframes dhaakPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+}
+
+.animate-dhaak-pulse {
+  animation: dhaakPulse 2s ease-in-out infinite;
+}
+
+/* Traditional Terracotta Texture */
+.bg-terracotta-warm {
+  background-color: #f7f1e6;
+  background-image: radial-gradient(#d97706 0.75px, transparent 0.75px), radial-gradient(#9b1b1b 0.75px, #f7f1e6 0.75px);
+  background-size: 30px 30px;
+  background-position: 0 0, 15px 15px;
+}
+
+/* Night Streets of Kolkata Gradient */
+.bg-kolkata-night {
+  background: radial-gradient(circle at 50% 20%, #1c1c22 0%, #101014 60%, #09090b 100%);
+}
+
+/* Festive Card Styling */
+.festive-card {
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(192, 86, 33, 0.18);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.festive-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(155, 27, 27, 0.45);
+  box-shadow: 0 16px 32px -8px rgba(155, 27, 27, 0.12);
+}
+
+/* Dark Festive Card */
+.festive-card-dark {
+  background: rgba(24, 24, 28, 0.85);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  transition: all 0.3s ease;
+}
+
+.festive-card-dark:hover {
+  border-color: rgba(212, 175, 55, 0.5);
+  box-shadow: 0 16px 32px -8px rgba(0, 0, 0, 0.4);
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f2ece0;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c5221f;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #9b1b1b;
+}
+
+/* Reduced motion accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
