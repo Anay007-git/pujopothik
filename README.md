@@ -102,18 +102,48 @@ Navigating Kolkata during the festival requires precision: millions throng the s
 - **Tangra Chinatown Night Trail**: Authentic Indo-Chinese dining (Golden Joy, Beijing, Big Boss) for midnight food runs.
 - **Iconic Bengali Sweets & Sherbets**: Paramount Cold Drinks (*Daab Sherbet*), K.C. Das, Balaram Mullick, and Chittaranjan Mistanna Bhandar.
 
-### 6. Cultural Heritage, Bonedi Bari & Stories
+### 6. 💰 Pujo Budget & Expense Planner
+- **Target Budget Meter**: Set an outing or daily spending cap (₹500, ₹1000, ₹2500).
+- **Route Transit Cost Estimator**: Calculates real-time estimated fares across Metro, Bus, or Cab/Auto legs.
+- **1-Tap Quick Expense Logger**: Instant logging for Kolkata snacks (Phuchka ₹40, Roll ₹70, Biryani ₹220), transit tickets, and fair toys with visual progress bars.
+- **Budget Alerts**: Visual warnings when spending approaches or exceeds the threshold.
+
+### 7. 👣 Pujo Step & Calorie Counter
+- **Real-Time Pedometer**: Step tracking via HTML5 DeviceMotion sensor and GPS distance deltas.
+- **Kolkata Food Calorie Burner**: Converts walking endurance into delicious street delicacies:
+  - 🥟 Phuchkas burned (25 kcal/phuchka)
+  - 🍛 Plates of Kolkata Mutton Biryani burned (650 kcal/plate)
+  - 🌯 Kathi Rolls burned (350 kcal/roll)
+  - 🥥 Glasses of Daab Sherbet burned (120 kcal/glass)
+- **Sharod Milestone Badges**: *শুভ পরিক্রমা*, *পদব্রজে পরিক্রমা*, *শারদ নাইট ওয়াকার*, *মহামায়া ম্যারাথনার*, and *শহুরে পথিক মহাবীর*.
+- **1-Tap Shareable Walk Card**: Formats walk and calorie burn stats for WhatsApp Status and Instagram stories.
+
+### 8. 📍 Multi-Select Area & Neighborhood Selector
+- **Multi-Zone Selection**: Filter across multiple zones simultaneously (e.g. `[✓] North Kolkata` + `[✓] Central Kolkata`).
+- **Granular Locality Pockets**: Multi-select neighborhood chips (*Kumartuli, Bagbazar, Sovabazar, College Street, Gariahat, Ballygunge, Chetla, Salt Lake, Behala, Bowbazar*).
+- **Accessibility Filtering**: One-tap toggle for wheelchair-accessible pandals with medical aid booths.
+
+### 9. 🤖 AI Enhancements
+- **⚡ AI Route Sequence Optimizer (Traveling Salesperson / 2-Opt)**: Re-orders pandals in the route drawer to compute the mathematically shortest itinerary, eliminating backtrack walking and calculating distance saved.
+- **🗣️ "পুজো মিত্র" (Pujo Mitra) AI Concierge**: Interactive bilingual assistant for budget routes, crowd predictions, wheelchair access, and food-pandal pairings tapping directly into the 227+ pandal database.
+
+### 10. 🪪 Personal Pujo Diary & Bucket List
+- **Visited Checklist**: 1-tap checkmark on pandal cards and modals to log visits (*e.g., 14 / 227 Pandals Visited*).
+- **Personal 1–5 Star Ratings & Memory Notes**: Record personal ratings and reflections.
+- **Sharod Scorecard**: Completion percentage meter with shareable festival summary.
+
+### 11. Cultural Heritage, Bonedi Bari & Stories
 - **Kumartuli Clay Artisans**: The sacred journey from holy Ganga clay and *Chokkhudan* (painting the divine eyes on Mahalaya) to finished idols.
 - **Dhunuchi Naach & Dhak**: The percussion beats of *Kashi* and camphor incense rituals during Ashtami Sandhi Puja.
 - **Aristocratic Bonedi Bari**: Deep historical archives on Sovabazar Rajbari (est. 1757), Sabarna Roy Choudhury (est. 1610), Hatkhola Dutta, and Thanthania Dutta Bari.
 - **Sindoor Khela & Immersion**: Dashami farewell processions to Babughat, Nimtala Ghat, and Baje Kadamtala Ghat.
 
-### 7. Bilingual Experience (বাংলা & English)
+### 12. Bilingual Experience (বাংলা & English)
 - Fluid real-time translation switch without reloading.
 - Culturally authentic Bengali typography (`Noto Sans Bengali`, `Hind Siliguri`) combined with modern Latin typography.
 - Authentic Bengali festival terminology: *সন্ধিপূজা*, *মহাসপ্তমী*, *ধুনুচি নাচ*, *কুমারটুলি*, *মহামায়া*, *পরিক্রমা*.
 
-### 8. Ultra-Fast Performance & Skeleton Loaders
+### 13. Ultra-Fast Performance & Skeleton Loaders
 - **95.2% Asset Compression**: High-resolution image directory compressed from **128.96 MB down to 6.23 MB** using MozJPEG/WebP optimization via `sharp`.
 - **Progressive Shimmer Skeletons**: Dynamic animated placeholder cards (`SkeletonLoader.tsx`) with hardware-accelerated CSS keyframe shimmer.
 - **Zero CLS (Cumulative Layout Shift)**: Progressive image scale and fade-in transitions.
@@ -308,3 +338,4 @@ interface Pandal {
 This project is licensed under the **MIT License** — feel free to use, enhance, and celebrate the spirit of Kolkata Durga Puja! 
 
 🌸 **শুভ শারদীয়া! (Subho Sharodiya)** 🌸
+

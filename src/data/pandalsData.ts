@@ -41,6 +41,8 @@ export interface Pandal {
     car: string;
     walk: string;
   };
+  wheelchairAccessible?: boolean;
+  vipPassAvailable?: boolean;
   source: string;
   lastVerified: string;
 }

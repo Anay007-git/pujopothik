@@ -1,9 +1,10 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { useLanguage } from "@/context/LanguageContext";
 import { useRoute, TransportMode } from "@/context/RouteContext";
+import { useCompanion } from "@/context/CompanionContext";
 import {
   X,
   Route,
@@ -19,6 +20,9 @@ import {
   Compass,
   ArrowRight,
   ExternalLink,
+  Sparkles,
+  Wallet,
+  Check,
 } from "lucide-react";
 
 export default function RouteDrawer() {
@@ -33,10 +37,17 @@ export default function RouteDrawer() {
     totalDistanceKm,
     totalWalkKm,
     totalEstimatedMinutes,
+    estimatedTransitCost,
     googleMapsUrl,
     isDrawerOpen,
     setIsDrawerOpen,
+    optimizeRouteAI,
+    savedDistanceKm,
+    isOptimizing,
   } = useRoute();
+
+  const { openCompanionWithTab } = useCompanion();
+  const [optimizeMessage, setOptimizeMessage] = useState<string | null>(null);
 
   if (!isDrawerOpen) return null;
 
@@ -54,9 +65,27 @@ export default function RouteDrawer() {
     return `${hours}h ${m}m`;
   };
 
+  const handleRunAIOptimize = () => {
+    const res = optimizeRouteAI();
+    if (res.savedKm > 0) {
+      setOptimizeMessage(
+        language === "bn"
+          ? `সাশ্রয়! AI অপ্টিমাইজেশনের মাধ্যমে ${res.savedKm} কিমি বাড়তি হাঁটা বাঁচল!`
+          : `Saved! AI sequence optimization eliminated ${res.savedKm} km of backtracking!`
+      );
+    } else {
+      setOptimizeMessage(
+        language === "bn"
+          ? "আপনার রুটটি ইতিমধ্যেই সর্বনিম্ন দূরত্বের ক্রমানুসারে সাজানো আছে।"
+          : "Your route sequence is already geographically optimal!"
+      );
+    }
+    setTimeout(() => setOptimizeMessage(null), 4000);
+  };
+
   return (
     <div
-      className="fixed inset-0 z-50 flex justify-end bg-black/60 backdrop-blur-sm animate-fadeIn"
+      className="fixed inset-0 z-[110] flex justify-end bg-black/60 backdrop-blur-sm animate-fadeIn"
       onClick={() => setIsDrawerOpen(false)}
     >
       <div
@@ -91,7 +120,7 @@ export default function RouteDrawer() {
             )}
             <button
               onClick={() => setIsDrawerOpen(false)}
-              className="p-2 text-stone-500 hover:text-stone-800 transition-colors"
+              className="p-2 rounded-full text-stone-500 hover:text-stone-800 transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
@@ -124,6 +153,34 @@ export default function RouteDrawer() {
             })}
           </div>
         </div>
+
+        {/* AI Sequence Optimizer Banner */}
+        {routePandals.length > 2 && (
+          <div className="px-4 py-2.5 bg-gradient-to-r from-[#9b1b1b]/10 via-[#d4af37]/15 to-[#9b1b1b]/10 border-b border-[#d4af37]/30 flex items-center justify-between gap-2">
+            <div className="flex items-center space-x-2">
+              <Sparkles className="w-4 h-4 text-[#d4af37] flex-shrink-0 animate-pulse" />
+              <span className="text-xs font-bold text-stone-800 font-bengali-title">
+                {language === "bn" ? "কম দূরত্বের স্মার্ট সিকোয়েন্স চান?" : "Want the shortest path sequence?"}
+              </span>
+            </div>
+            <button
+              onClick={handleRunAIOptimize}
+              disabled={isOptimizing}
+              className="px-3 py-1 rounded-full bg-[#9b1b1b] hover:bg-[#771d1d] text-white text-[11px] font-bold shadow transition-all active:scale-95 whitespace-nowrap flex items-center space-x-1"
+            >
+              <Sparkles className="w-3 h-3 text-[#d4af37]" />
+              <span>{language === "bn" ? "AI অপ্টিমাইজ" : "AI Optimize"}</span>
+            </button>
+          </div>
+        )}
+
+        {/* Optimize Message Toast */}
+        {optimizeMessage && (
+          <div className="mx-4 mt-2.5 p-2.5 rounded-xl bg-emerald-50 border border-emerald-300 text-xs text-emerald-800 font-medium animate-fadeIn flex items-center space-x-2">
+            <Check className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+            <span>{optimizeMessage}</span>
+          </div>
+        )}
 
         {/* Route Stops List (Reorderable) */}
         <div className="flex-1 overflow-y-auto p-4 space-y-2.5">
@@ -196,35 +253,53 @@ export default function RouteDrawer() {
 
         {/* Dynamic Route Metrics & Summary Footer */}
         {routePandals.length > 0 && (
-          <div className="p-4 bg-[#fbf8f0] border-t border-[#c05621]/20 space-y-3.5">
-            {/* Quick Metrics 3-Grid */}
-            <div className="grid grid-cols-3 gap-2 text-center">
+          <div className="p-4 bg-[#fbf8f0] border-t border-[#c05621]/20 space-y-3">
+            {/* Quick Metrics 4-Grid (Distance, Walk, Time, Fare) */}
+            <div className="grid grid-cols-4 gap-1.5 text-center">
               <div className="p-2 rounded-xl bg-white border border-stone-200">
-                <span className="text-[10px] uppercase font-bold text-stone-500 block">
+                <span className="text-[9px] uppercase font-bold text-stone-500 block truncate">
                   {t.estimatedDistance}
                 </span>
-                <span className="text-sm sm:text-base font-bold text-stone-900">
+                <span className="text-xs sm:text-sm font-bold text-stone-900 block font-bengali-sans">
                   {totalDistanceKm} km
                 </span>
               </div>
 
               <div className="p-2 rounded-xl bg-white border border-stone-200">
-                <span className="text-[10px] uppercase font-bold text-stone-500 block">
+                <span className="text-[9px] uppercase font-bold text-stone-500 block truncate">
                   {t.estimatedWalking}
                 </span>
-                <span className="text-sm sm:text-base font-bold text-stone-900">
+                <span className="text-xs sm:text-sm font-bold text-stone-900 block font-bengali-sans">
                   {totalWalkKm} km
                 </span>
               </div>
 
               <div className="p-2 rounded-xl bg-white border border-stone-200">
-                <span className="text-[10px] uppercase font-bold text-stone-500 block">
-                  {t.estimatedJourneyTime}
+                <span className="text-[9px] uppercase font-bold text-stone-500 block truncate">
+                  {language === "bn" ? "আনুমানিক সময়" : "Time"}
                 </span>
-                <span className="text-xs sm:text-sm font-bold text-[#9b1b1b]">
+                <span className="text-xs sm:text-sm font-bold text-[#9b1b1b] block font-bengali-sans">
                   {formatMinutes(totalEstimatedMinutes)}
                 </span>
               </div>
+
+              {/* Estimated Transit Cost Button */}
+              <button
+                onClick={() => {
+                  setIsDrawerOpen(false);
+                  openCompanionWithTab("budget");
+                }}
+                className="p-2 rounded-xl bg-[#9b1b1b]/5 hover:bg-[#9b1b1b]/10 border border-[#9b1b1b]/20 transition-all text-left group"
+                title="View in Budget Planner"
+              >
+                <span className="text-[9px] uppercase font-bold text-[#9b1b1b] block truncate flex items-center">
+                  <Wallet className="w-2.5 h-2.5 mr-0.5" />
+                  {language === "bn" ? "ভাড়া খরচ" : "Fare"}
+                </span>
+                <span className="text-xs sm:text-sm font-black text-emerald-800 block font-bengali-sans group-hover:underline">
+                  ₹{estimatedTransitCost}
+                </span>
+              </button>
             </div>
 
             {/* Google Maps Multi-Stop Link */}
@@ -232,7 +307,7 @@ export default function RouteDrawer() {
               href={googleMapsUrl}
               target="_blank"
               rel="noreferrer"
-              className="w-full flex items-center justify-center space-x-2 py-3 px-4 rounded-xl bg-[#9b1b1b] hover:bg-[#771d1d] text-white text-xs sm:text-sm font-bold shadow-md active:scale-95 transition-all text-center"
+              className="w-full flex items-center justify-center space-x-2 py-2.5 px-4 rounded-xl bg-[#9b1b1b] hover:bg-[#771d1d] text-white text-xs sm:text-sm font-bold shadow-md active:scale-95 transition-all text-center"
             >
               <Navigation className="w-4 h-4 text-[#d4af37]" />
               <span>{t.openInGoogleMaps}</span>
@@ -256,4 +331,3 @@ export default function RouteDrawer() {
     </div>
   );
 }
-

@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Pandal } from "@/data/pandalsData";
 import { useLanguage } from "@/context/LanguageContext";
 import { useRoute } from "@/context/RouteContext";
+import { useCompanion } from "@/context/CompanionContext";
 import {
   MapPin,
   Train,
@@ -21,6 +22,7 @@ import {
   AlertCircle,
   Award,
   Bus,
+  CheckCircle2,
 } from "lucide-react";
 
 interface PandalCardProps {
@@ -31,9 +33,11 @@ interface PandalCardProps {
 export default function PandalCard({ pandal, onViewDetails }: PandalCardProps) {
   const { language, t } = useLanguage();
   const { addToRoute, removeFromRoute, isInRoute } = useRoute();
+  const { toggleVisited, isVisited } = useCompanion();
   const [isExpanded, setIsExpanded] = useState(false);
   const [imgLoaded, setImgLoaded] = useState(false);
   const inRoute = isInRoute(pandal.id);
+  const isDone = isVisited(pandal.id);
 
   // Category labels and colors
   const categoryConfig = {
@@ -106,10 +110,36 @@ export default function PandalCard({ pandal, onViewDetails }: PandalCardProps) {
           </span>
         </div>
 
-        {/* Top Right Crowd Indicator Badge */}
-        <div className="absolute top-3 right-3 z-10 flex items-center space-x-1.5 px-2.5 py-1 rounded-full bg-black/75 backdrop-blur-md border border-white/15 text-white text-[10px] font-medium shadow">
-          <span className={`w-2 h-2 rounded-full ${crowdColor} animate-pulse`} />
-          <span className="font-semibold">{crowdText}</span>
+        {/* Top Right Crowd Indicator & Visited Toggle */}
+        <div className="absolute top-3 right-3 z-10 flex items-center space-x-1.5">
+          <div className="flex items-center space-x-1.5 px-2.5 py-1 rounded-full bg-black/75 backdrop-blur-md border border-white/15 text-white text-[10px] font-medium shadow">
+            <span className={`w-2 h-2 rounded-full ${crowdColor} animate-pulse`} />
+            <span className="font-semibold">{crowdText}</span>
+          </div>
+
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              toggleVisited(pandal.id);
+            }}
+            className={`p-1 rounded-full backdrop-blur-md border transition-all shadow active:scale-90 ${
+              isDone
+                ? "bg-emerald-600 text-white border-emerald-400 ring-2 ring-emerald-400/40"
+                : "bg-black/65 text-stone-300 border-white/20 hover:bg-black/85 hover:text-white"
+            }`}
+            title={
+              isDone
+                ? language === "bn"
+                  ? "দর্শন সম্পন্ন (ডায়েরি)"
+                  : "Visited"
+                : language === "bn"
+                ? "ডায়েরিতে দর্শন চিহ্নিত করুন"
+                : "Mark as visited in diary"
+            }
+            aria-label={isDone ? "Mark as unvisited" : "Mark as visited"}
+          >
+            <CheckCircle2 className="w-3.5 h-3.5" />
+          </button>
         </div>
 
         {/* Bottom Theme Highlight Banner on Image */}

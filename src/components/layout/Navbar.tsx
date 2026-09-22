@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useLanguage } from "@/context/LanguageContext";
 import { useRoute } from "@/context/RouteContext";
+import { useCompanion } from "@/context/CompanionContext";
 import DurgaEyeIcon from "@/components/animations/DurgaEyeIcon";
 import {
   Compass,
@@ -22,12 +23,15 @@ import {
   ChevronDown,
   ChevronRight,
   Github,
+  Wallet,
+  Footprints,
 } from "lucide-react";
 
 export default function Navbar({ onOpenSearch }: { onOpenSearch?: () => void }) {
   const pathname = usePathname();
   const { language, toggleLanguage, t } = useLanguage();
   const { routePandals, setIsDrawerOpen } = useRoute();
+  const { openCompanionWithTab, totalSpent, steps, visitedPandals } = useCompanion();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [moreDropdownOpen, setMoreDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -286,6 +290,16 @@ export default function Navbar({ onOpenSearch }: { onOpenSearch?: () => void }) 
                 )}
               </button>
 
+              {/* Pujo Companion Hub Button (Desktop) */}
+              <button
+                onClick={() => openCompanionWithTab("budget")}
+                className="hidden md:flex items-center space-x-1.5 px-3 py-1.5 rounded-full border border-[#d4af37]/60 bg-gradient-to-r from-[#9b1b1b]/10 via-[#d4af37]/15 to-[#9b1b1b]/10 hover:bg-[#d4af37]/20 text-xs font-bold text-stone-850 transition-all shadow-xs active:scale-95 whitespace-nowrap"
+                title="Open Budget, Steps & AI Companion"
+              >
+                <Sparkles className="w-3.5 h-3.5 text-[#d4af37]" />
+                <span className="font-bengali-title">{language === "bn" ? "পুজো সঙ্গী" : "Companion"}</span>
+              </button>
+
               {/* Mobile / Tablet Hamburger Toggle */}
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -372,6 +386,51 @@ export default function Navbar({ onOpenSearch }: { onOpenSearch?: () => void }) 
               {routePandals.length} {language === "bn" ? "মণ্ডপ" : "saved"}
             </span>
           </button>
+
+          {/* Quick Companion Launcher Cards */}
+          <div className="grid grid-cols-3 gap-1.5 pt-1">
+            <button
+              onClick={() => {
+                setMobileMenuOpen(false);
+                openCompanionWithTab("budget");
+              }}
+              className="p-2 rounded-xl bg-white border border-[#c05621]/20 text-center hover:bg-[#faf7ee] transition-all shadow-2xs active:scale-95"
+            >
+              <div className="text-sm">💰</div>
+              <div className="text-[10px] font-bold text-stone-800 mt-0.5 font-bengali-title">
+                {language === "bn" ? "বাজেট" : "Budget"}
+              </div>
+              <div className="text-[9px] text-[#9b1b1b] font-black font-bengali-sans">₹{totalSpent}</div>
+            </button>
+
+            <button
+              onClick={() => {
+                setMobileMenuOpen(false);
+                openCompanionWithTab("steps");
+              }}
+              className="p-2 rounded-xl bg-white border border-[#c05621]/20 text-center hover:bg-[#faf7ee] transition-all shadow-2xs active:scale-95"
+            >
+              <div className="text-sm">👣</div>
+              <div className="text-[10px] font-bold text-stone-800 mt-0.5 font-bengali-title">
+                {language === "bn" ? "স্টেপ" : "Steps"}
+              </div>
+              <div className="text-[9px] text-amber-700 font-black font-bengali-sans">{steps.toLocaleString()}</div>
+            </button>
+
+            <button
+              onClick={() => {
+                setMobileMenuOpen(false);
+                openCompanionWithTab("ai");
+              }}
+              className="p-2 rounded-xl bg-gradient-to-br from-[#9b1b1b]/10 to-[#d4af37]/15 border border-[#d4af37]/40 text-center hover:bg-[#d4af37]/20 transition-all shadow-2xs active:scale-95"
+            >
+              <div className="text-sm">🤖</div>
+              <div className="text-[10px] font-bold text-[#9b1b1b] mt-0.5 font-bengali-title">
+                {language === "bn" ? "মিত্র AI" : "Mitra AI"}
+              </div>
+              <div className="text-[9px] text-stone-600 font-bold">227+ Pujo</div>
+            </button>
+          </div>
         </div>
 
         {/* Scrollable Navigation Links */}

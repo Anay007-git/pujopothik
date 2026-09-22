@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Pandal } from "@/data/pandalsData";
 import { useLanguage } from "@/context/LanguageContext";
 import { useRoute } from "@/context/RouteContext";
+import { useCompanion } from "@/context/CompanionContext";
 import AlpanaDivider from "@/components/animations/AlpanaDivider";
 import {
   X,
@@ -22,6 +23,8 @@ import {
   Share2,
   ShieldCheck,
   AlertTriangle,
+  CheckCircle2,
+  Star,
 } from "lucide-react";
 
 interface PandalModalProps {
@@ -37,6 +40,7 @@ export default function PandalModal({
 }: PandalModalProps) {
   const { language, t } = useLanguage();
   const { addToRoute, removeFromRoute, isInRoute } = useRoute();
+  const { toggleVisited, isVisited, pandalRatings, setPandalRating } = useCompanion();
   const [activeTransportTab, setActiveTransportTab] = useState<
     "metro" | "bus" | "train" | "car" | "walk"
   >("metro");
@@ -44,6 +48,8 @@ export default function PandalModal({
   if (!pandal) return null;
 
   const inRoute = isInRoute(pandal.id);
+  const isDone = isVisited(pandal.id);
+  const currentRating = pandalRatings[pandal.id] || 0;
 
   const transportTabs = [
     { key: "metro" as const, label: "Metro", icon: Train },
@@ -104,13 +110,32 @@ export default function PandalModal({
             <div className="absolute inset-0 bg-gradient-to-t from-[#121215] via-[#121215]/40 to-transparent" />
 
             {/* Top Tag Badges */}
-            <div className="absolute top-4 left-4 z-10 flex gap-2">
+            <div className="absolute top-4 left-4 z-10 flex flex-wrap gap-2">
               <span className="px-3 py-1 rounded-full bg-[#9b1b1b] text-white text-xs font-semibold shadow">
                 {pandal.zone}
               </span>
               <span className="px-3 py-1 rounded-full bg-[#d4af37] text-stone-900 text-xs font-bold shadow">
                 {pandal.category.toUpperCase().replace("_", " ")}
               </span>
+              <button
+                onClick={() => toggleVisited(pandal.id)}
+                className={`px-3 py-1 rounded-full text-xs font-bold shadow flex items-center space-x-1.5 transition-all ${
+                  isDone
+                    ? "bg-emerald-600 text-white ring-2 ring-emerald-400"
+                    : "bg-black/60 text-stone-200 hover:bg-black/80"
+                }`}
+              >
+                <CheckCircle2 className="w-3.5 h-3.5" />
+                <span>
+                  {isDone
+                    ? language === "bn"
+                      ? "দর্শন সম্পন্ন ✓"
+                      : "Visited ✓"
+                    : language === "bn"
+                    ? "ডায়েরিতে দর্শন চিহ্নিত করুন"
+                    : "Mark Visited"}
+                </span>
+              </button>
             </div>
 
             {/* Bottom Title on Hero */}
@@ -118,9 +143,33 @@ export default function PandalModal({
               <h2 className="font-bengali-title text-2xl sm:text-3xl font-bold text-white leading-tight drop-shadow-md">
                 {language === "bn" ? pandal.bengaliName : pandal.name}
               </h2>
-              <p className="text-sm font-medium text-[#d4af37] mt-0.5 drop-shadow">
-                {language === "bn" ? pandal.name : pandal.bengaliName} • {pandal.area}
-              </p>
+              <div className="flex flex-wrap items-center justify-between gap-2 mt-0.5">
+                <p className="text-sm font-medium text-[#d4af37] drop-shadow">
+                  {language === "bn" ? pandal.name : pandal.bengaliName} • {pandal.area}
+                </p>
+                {/* 1-5 Star Rating */}
+                <div className="flex items-center space-x-1 bg-black/50 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/10">
+                  <span className="text-[10px] text-stone-300 font-bold mr-1">
+                    {language === "bn" ? "রেটিং:" : "Rating:"}
+                  </span>
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <button
+                      key={star}
+                      onClick={() => setPandalRating(pandal.id, star)}
+                      title={`Rate ${star} stars`}
+                      className="p-0.5"
+                    >
+                      <Star
+                        className={`w-3.5 h-3.5 ${
+                          star <= currentRating
+                            ? "fill-amber-400 text-amber-400"
+                            : "text-white/40 hover:text-amber-300"
+                        }`}
+                      />
+                    </button>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
 

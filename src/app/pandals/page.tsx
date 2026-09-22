@@ -19,9 +19,11 @@ function PandalsDirectoryContent() {
 
   const [filters, setFilters] = useState<FilterState>({
     search: "",
-    zone: initialZone,
+    zones: initialZone !== "ALL" ? [initialZone] : [],
+    neighborhoods: [],
     category: "ALL",
     crowd: "ALL",
+    accessibilityOnly: false,
   });
 
   const filteredPandals = useMemo(() => {
@@ -38,8 +40,16 @@ function PandalsDirectoryContent() {
         pandal.nearestMetro.station.toLowerCase().includes(q) ||
         pandal.nearestMetro.bengaliStation.includes(filters.search.trim());
 
-      // Zone
-      const matchZone = filters.zone === "ALL" || pandal.zone === filters.zone;
+      // Multi-zone matching (empty = ALL)
+      const matchZone =
+        filters.zones.length === 0 || filters.zones.includes(pandal.zone);
+
+      // Multi-neighborhood matching (empty = ALL)
+      const matchNeighborhood =
+        filters.neighborhoods.length === 0 ||
+        filters.neighborhoods.some((n) =>
+          pandal.area.toLowerCase().includes(n.toLowerCase())
+        );
 
       // Category
       const matchCat =
@@ -49,7 +59,18 @@ function PandalsDirectoryContent() {
       const matchCrowd =
         filters.crowd === "ALL" || pandal.crowdLevel === filters.crowd;
 
-      return matchSearch && matchZone && matchCat && matchCrowd;
+      // Wheelchair Accessibility
+      const matchAccessibility =
+        !filters.accessibilityOnly || Boolean(pandal.wheelchairAccessible ?? (pandal.crowdLevel !== "Very High"));
+
+      return (
+        matchSearch &&
+        matchZone &&
+        matchNeighborhood &&
+        matchCat &&
+        matchCrowd &&
+        matchAccessibility
+      );
     });
   }, [filters]);
 

@@ -8,6 +8,9 @@ import RouteDrawer from "@/components/route-builder/RouteDrawer";
 import IntroScreen from "@/components/animations/IntroScreen";
 import SearchModal from "./SearchModal";
 import PandalModal from "@/components/pandals/PandalModal";
+import PujoCompanionModal from "@/components/companion/PujoCompanionModal";
+import PujoCompanionTrigger from "@/components/companion/PujoCompanionTrigger";
+import { CompanionProvider } from "@/context/CompanionContext";
 import { Pandal } from "@/data/pandalsData";
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
@@ -19,7 +22,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   };
 
   return (
-    <>
+    <CompanionProvider>
       {/* 2-Second Festive Intro Screen */}
       <IntroScreen />
 
@@ -32,11 +35,17 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       {/* Bengali Magazine Styled Footer */}
       <Footer />
 
+      {/* Floating Pujo Companion Trigger (Budget, Steps & AI) */}
+      <PujoCompanionTrigger />
+
       {/* Mobile Fixed Bottom Navigation */}
       <MobileBottomNav onOpenSearch={() => setIsSearchOpen(true)} />
 
       {/* Slide-in Route Drawer */}
       <RouteDrawer />
+
+      {/* Unified Pujo Companion Hub Modal (Budget, Steps, Diary & AI Mitra) */}
+      <PujoCompanionModal />
 
       {/* Global Instant Search Modal */}
       <SearchModal
@@ -50,7 +59,6 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         pandal={modalPandal}
         onClose={() => setModalPandal(null)}
       />
-    </>
+    </CompanionProvider>
   );
 }
-
